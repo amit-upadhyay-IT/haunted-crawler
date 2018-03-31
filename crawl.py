@@ -36,7 +36,7 @@ def crawl_recursively(main_link, fetched_link, match_type):
                     if exten[-1] is not None:
                         if exten[-1] == match_type:
                             # it matches the extension so download the file
-                            print last_word
+                            print link.get('href')
                             pass
                         else:
                             # doesn't match the match_type so call it recursively
@@ -48,6 +48,7 @@ def crawl_recursively(main_link, fetched_link, match_type):
                     crawl_recursively(main_link, word, match_type)
             else:
                 print 'no'
+                print link.get('href')
             # print link.get('href')
 
     except HTTPError:
