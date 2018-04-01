@@ -39,9 +39,6 @@ def crawl_recursively(main_link, fetched_link, match_type):
         links = bs.findAll('a', attrs={'href': re.compile('[a-zA-Z0-9_()]')})
 
         # now iterate over the links and
-        # discard the next call if link is the pointing to some parent
-        # directory in same domain, or discard if the link is same as
-        # current link (this can be identified by check if it has / or not)
         for link in links:
             # get url
             url = link.get('href')
@@ -54,8 +51,6 @@ def crawl_recursively(main_link, fetched_link, match_type):
                     # call and update main_link and fetched_link to url
                     crawl_recursively(url, url, match_type)
             else:
-                # if url == 'Slides.pdf':
-                #     print 'main_link:-', main_link
                 # the url is reference url so append the main url
                 # Also, check if the url is pointing to parent dir or current
                 # dir, then I don't need to perform next call
@@ -63,15 +58,13 @@ def crawl_recursively(main_link, fetched_link, match_type):
                 if '/' not in url:
                     # check if the url is the required file name or not
                     if '.' in url:
-                        # print 'amit:-', url
-                        if '.' in url:
-                            # get last part and ignore next call if it's
-                            # other than match_type type, because it can be
-                            # a large file will will take much time in reading
-                            last_part = url.split('.')[-1]
-                            if last_part == match_type:
-                                up_url = main_link + '/' + url
-                                crawl_recursively(up_url, up_url, match_type)
+                        # get last part and ignore next call if it's
+                        # other than match_type type, because it can be
+                        # a large file will will take much time in reading
+                        last_part = url.split('.')[-1]
+                        if last_part == match_type:
+                            up_url = main_link + '/' + url
+                            crawl_recursively(up_url, up_url, match_type)
                 else:
                     # now, url can be parent or can be next page, but I will
                     # append it to the main_link, so that if there it's a parent
