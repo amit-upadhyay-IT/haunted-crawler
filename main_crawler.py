@@ -1,12 +1,13 @@
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
 from urllib2 import HTTPError
+from urllib2 import URLError
 import re
 
 
 def check_extension(link, match_type):
     # split the link about / and get the last word
-    word_list = link.split('/')[-1]
+    word_list = link.split('/')
     last_word = None
     if len(word_list) >= 1:
         last_word = word_list[-1]
@@ -22,10 +23,9 @@ def check_extension(link, match_type):
 
 def crawl_recursively(main_link, fetched_link, match_type):
     # base case: if the link has the required match_type as extension
-    print 'fetc:-', fetched_link
     if check_extension(fetched_link, match_type) is True:
         # write download command
-        print fetched_link
+        print 'success:-', fetched_link
         return
     # recursive case: fetch the link in the current page,
     try:
@@ -51,12 +51,23 @@ def crawl_recursively(main_link, fetched_link, match_type):
                     # call and update main_link and fetched_link to url
                     crawl_recursively(url, url, match_type)
             else:
+                # if url == 'Slides.pdf':
+                #     print 'main_link:-', main_link
                 # the url is reference url so append the main url
                 # Also, check if the url is pointing to parent dir or current
                 # dir, then I don't need to perform next call
                 # if url has no / then it is pointing to current dir
                 if '/' not in url:
-                    pass
+                    # check if the url is the required file name or not
+                    if '.' in url:
+                        print 'amit:-', url
+                        # last_part = url.split('.')[-1]
+                        # if last_part == match_type:
+                        up_url = main_link + '/' + url
+                            # print 'up_url:-', up_url
+                            # if check_extension(up_url, match_type):
+                            #     print 'works well'
+                        crawl_recursively(up_url, up_url, match_type)
                 else:
                     # now, url can be parent or can be next page, but I will
                     # append it to the main_link, so that if there it's a parent
@@ -65,7 +76,11 @@ def crawl_recursively(main_link, fetched_link, match_type):
                     update_url = main_link + url  # no need to append '/'
                     crawl_recursively(update_url, update_url, match_type)
     except HTTPError:
-        print 'PAGE NOT FOUND'
+        # print 'PAGE NOT FOUND'
+        pass
+    except URLError:
+        # print 'urllib2.URLError: name or service not known'
+        pass
 
 
 if __name__ == '__main__':
