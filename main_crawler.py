@@ -26,7 +26,8 @@ def crawl_recursively(main_link, fetched_link, match_type):
     # base case: if the link has the required match_type as extension
     if check_extension(fetched_link, match_type) is True:
         # write download command
-        call(['wget', fetched_link])
+        call(['mkdir', 'crawled_files'])
+        call(['wget', fetched_link, '-P', './crawled_files/'])
         print fetched_link
         return
     # recursive case: fetch the link in the current page,
