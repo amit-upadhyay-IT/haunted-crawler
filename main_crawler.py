@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from urllib2 import urlopen
 from urllib2 import HTTPError
 from urllib2 import URLError
+from subprocess import call
 import re
 
 
@@ -25,6 +26,7 @@ def crawl_recursively(main_link, fetched_link, match_type):
     # base case: if the link has the required match_type as extension
     if check_extension(fetched_link, match_type) is True:
         # write download command
+        call(['wget', fetched_link])
         print fetched_link
         return
     # recursive case: fetch the link in the current page,
