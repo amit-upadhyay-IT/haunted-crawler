@@ -25,7 +25,7 @@ def crawl_recursively(main_link, fetched_link, match_type):
     # base case: if the link has the required match_type as extension
     if check_extension(fetched_link, match_type) is True:
         # write download command
-        print 'success:-', fetched_link
+        print fetched_link
         return
     # recursive case: fetch the link in the current page,
     try:
@@ -60,14 +60,15 @@ def crawl_recursively(main_link, fetched_link, match_type):
                 if '/' not in url:
                     # check if the url is the required file name or not
                     if '.' in url:
-                        print 'amit:-', url
-                        # last_part = url.split('.')[-1]
-                        # if last_part == match_type:
-                        up_url = main_link + '/' + url
-                            # print 'up_url:-', up_url
-                            # if check_extension(up_url, match_type):
-                            #     print 'works well'
-                        crawl_recursively(up_url, up_url, match_type)
+                        # print 'amit:-', url
+                        if '.' in url:
+                            # get last part and ignore next call if it's
+                            # other than match_type type, because it can be
+                            # a large file will will take much time in reading
+                            last_part = url.split('.')[-1]
+                            if last_part == match_type:
+                                up_url = main_link + '/' + url
+                                crawl_recursively(up_url, up_url, match_type)
                 else:
                     # now, url can be parent or can be next page, but I will
                     # append it to the main_link, so that if there it's a parent
